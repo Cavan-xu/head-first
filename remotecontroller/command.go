@@ -10,12 +10,16 @@ import (
 
 type Command interface {
 	Execute()
+	Undo()
 }
 
 type NoCommand struct {
 }
 
 func (c *NoCommand) Execute() {
+}
+
+func (c *NoCommand) Undo() {
 }
 
 type LightOnCommand struct {
@@ -30,6 +34,10 @@ func (l *LightOnCommand) Execute() {
 	l.light.On()
 }
 
+func (l *LightOnCommand) Undo() {
+	l.light.Off()
+}
+
 type LightOffCommand struct {
 	light Light
 }
@@ -40,6 +48,10 @@ func NewLightOffCommand(light Light) *LightOffCommand {
 
 func (l *LightOffCommand) Execute() {
 	l.light.Off()
+}
+
+func (l *LightOffCommand) Undo() {
+	l.light.On()
 }
 
 type Light interface {
@@ -70,6 +82,10 @@ func (d *DoorUpCommand) Execute() {
 	d.door.Up()
 }
 
+func (d *DoorUpCommand) Undo() {
+	d.door.Down()
+}
+
 type DoorDownCommand struct {
 	door Door
 }
@@ -82,6 +98,10 @@ func (d *DoorDownCommand) Execute() {
 	d.door.Down()
 }
 
+func (d *DoorDownCommand) Undo() {
+	d.door.Up()
+}
+
 type Door interface {
 	Up()
 	Down()
@@ -91,9 +111,9 @@ type GarageDoor struct {
 }
 
 func (g *GarageDoor) Up() {
-	fmt.Println("garage door on")
+	fmt.Println("garage door up")
 }
 
 func (g *GarageDoor) Down() {
-	fmt.Println("garage door off")
+	fmt.Println("garage door down")
 }

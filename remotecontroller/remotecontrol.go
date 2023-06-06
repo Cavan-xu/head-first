@@ -3,8 +3,9 @@ package remotecontrol
 func NewSimpleRemoteControl() *SimpleRemoteControl {
 	soltCount := 6
 	remoteController := &SimpleRemoteControl{
-		OnCommand:  make([]Command, soltCount),
-		OffCommand: make([]Command, soltCount),
+		OnCommand:   make([]Command, soltCount),
+		OffCommand:  make([]Command, soltCount),
+		UndoCommand: &NoCommand{},
 	}
 	for i := 0; i < soltCount; i++ {
 		remoteController.OnCommand[i] = &NoCommand{}
@@ -14,8 +15,9 @@ func NewSimpleRemoteControl() *SimpleRemoteControl {
 }
 
 type SimpleRemoteControl struct {
-	OnCommand  []Command
-	OffCommand []Command
+	OnCommand   []Command
+	OffCommand  []Command
+	UndoCommand Command
 }
 
 func (s *SimpleRemoteControl) SetOnCommand(solt int, command Command) {
@@ -28,8 +30,14 @@ func (s *SimpleRemoteControl) SetOffCommand(solt int, command Command) {
 
 func (s *SimpleRemoteControl) OnButtonPress(solt int) {
 	s.OnCommand[solt].Execute()
+	s.UndoCommand = s.OnCommand[solt]
 }
 
 func (s *SimpleRemoteControl) OffButtonPress(solt int) {
 	s.OffCommand[solt].Execute()
+	s.UndoCommand = s.OffCommand[solt]
+}
+
+func (s *SimpleRemoteControl) UndoButtonPress() {
+	s.UndoCommand.Undo()
 }

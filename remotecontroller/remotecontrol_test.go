@@ -23,4 +23,5 @@ func TestSimpleRemoteControlPress(t *testing.T) {
 	remoteControl.OffButtonPress(0)
 	remoteControl.OnButtonPress(1)
 	remoteControl.OffButtonPress(1)
+	remoteControl.UndoButtonPress()
 }
