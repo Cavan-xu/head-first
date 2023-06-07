@@ -117,3 +117,20 @@ func (g *GarageDoor) Up() {
 func (g *GarageDoor) Down() {
 	fmt.Println("garage door down")
 }
+
+// 一个按钮多个命令
+type MacroCommand struct {
+	commands []Command
+}
+
+func (m *MacroCommand) Execute() {
+	for _, cmd := range m.commands {
+		cmd.Execute()
+	}
+}
+
+func (m *MacroCommand) Undo() {
+	for i := len(m.commands) - 1; i >= 0; i-- {
+		m.commands[i].Undo()
+	}
+}
